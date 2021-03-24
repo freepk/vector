@@ -52,10 +52,10 @@ func intersectVec(v0, v1 *vector) {
 		} else if vi0.currBase() > vi1.currBase() {
 			vi1.next()
 		} else {
-			r0 = [4]uint64{0, 0, 0, 0}
-			r1 = [4]uint64{0, 0, 0, 0}
-			bitsOr(&r0, vi0.currData())
-			bitsOr(&r1, vi1.currData())
+			r0[0], r0[1], r0[2], r0[3] = 0, 0, 0, 0
+			r1[0], r1[1], r1[2], r1[3] = 0, 0, 0, 0
+			bytesToBits(&r0, vi0.currData())
+			bytesToBits(&r1, vi1.currData())
 			r0[0] &= r1[0]
 			r0[1] &= r1[1]
 			r0[2] &= r1[2]

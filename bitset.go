@@ -12,20 +12,8 @@ func buildBitsTable(r *[256]uint64) {
 	}
 }
 
-func bitsSet(r *[4]uint64, b []uint8) {
-	for i := 0; i < len(b); i++ {
-		r[(b[i] >> 6)] = bitsTable[b[i]]
-	}
-}
-
-func bitsOr(r *[4]uint64, b []uint8) {
+func bytesToBits(r *[4]uint64, b []uint8) {
 	for i := 0; i < len(b); i++ {
 		r[(b[i] >> 6)] |= bitsTable[b[i]]
-	}
-}
-
-func bitsAnd(r *[4]uint64, b []uint8) {
-	for i := 0; i < len(b); i++ {
-		r[(b[i] >> 6)] &= bitsTable[b[i]]
 	}
 }
