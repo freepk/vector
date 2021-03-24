@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	firstArraySize  = 1024 * 1024
+	firstArraySize  = 128 * 1024
 	secondArraySize = 1024 * 1024
 	maxArrayValue   = 16 * 1024 * 1024
 )
@@ -44,16 +44,18 @@ func intersectArr8(a0, a1 []uint8) {
 func intersectVec(v0, v1 *vector) {
 	vi0 := newVecIter(v0)
 	vi1 := newVecIter(v1)
+	r0 := [4]uint64{0, 0, 0, 0}
+	r1 := [4]uint64{0, 0, 0, 0}
 	for vi0.hasNext() && vi1.hasNext() {
 		if vi0.currBase() < vi1.currBase() {
 			vi0.next()
 		} else if vi0.currBase() > vi1.currBase() {
 			vi1.next()
 		} else {
-			// intersectArr8(vi0.currData(), vi1.currData())
-			r := [4]uint64{0, 0, 0, 0}
-			bitsSet(&r, vi0.currData())
-			bitsAnd(&r, vi1.currData())
+			r0 = [4]uint64{0, 0, 0, 0}
+			r1 = [4]uint64{0, 0, 0, 0}
+			bitsOr(&r0, vi0.currData())
+			bitsOr(&r1, vi1.currData())
 			vi0.next()
 			vi1.next()
 		}
