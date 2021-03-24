@@ -56,6 +56,10 @@ func intersectVec(v0, v1 *vector) {
 			r1 = [4]uint64{0, 0, 0, 0}
 			bitsOr(&r0, vi0.currData())
 			bitsOr(&r1, vi1.currData())
+			r0[0] &= r1[0]
+			r0[1] &= r1[1]
+			r0[2] &= r1[2]
+			r0[3] &= r1[3]
 			vi0.next()
 			vi1.next()
 		}
