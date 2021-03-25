@@ -2,14 +2,21 @@ package vector
 
 import (
 	"github.com/freepk/iterator"
+	iterator2 "github.com/iGordienko/iterator"
 	"testing"
 )
 
 const (
-	firstArraySize  = 128 * 1024
+	firstArraySize  = 1024 * 1024
 	secondArraySize = 1024 * 1024
 	maxArrayValue   = 16 * 1024 * 1024
 )
+
+func init() {
+	println(`firstArraySize`, firstArraySize,
+		`secondArraySize`, secondArraySize,
+		`maxValue`, maxArrayValue)
+}
 
 func intersectArr(a0, a1 []int) {
 	i := 0
@@ -70,6 +77,21 @@ func BenchmarkIterIntersect(b *testing.B) {
 	a0 := randArray(firstArraySize, maxArrayValue)
 	a1 := randArray(secondArraySize, maxArrayValue)
 	it := iterator.NewInterIter(iterator.NewArrayIter(a0), iterator.NewArrayIter(a1))
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		it.Reset()
+		for {
+			if _, ok := it.Next(); !ok {
+				break
+			}
+		}
+	}
+}
+
+func BenchmarkIGogoIterIntersect(b *testing.B) {
+	a0 := randArray(firstArraySize, maxArrayValue)
+	a1 := randArray(secondArraySize, maxArrayValue)
+	it := iterator2.NewFasterIntersectionIterator(iterator2.NewArrayIter(a0), iterator2.NewArrayIter(a1))
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		it.Reset()
