@@ -10,6 +10,10 @@ func newVecIter(vec *vector) *vecIter {
 	return &vecIter{pos: 0, vec: vec}
 }
 
+func (vi *vecIter) reset() {
+	vi.pos = 0
+}
+
 func (vi *vecIter) next() bool {
 	if vi.hasNext() {
 		vi.off += int(vi.currSize())
