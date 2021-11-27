@@ -45,7 +45,7 @@ func TestFetchVec_WithDuplicate(t *testing.T) {
 }
 
 func TestFetchUnpackVector(t *testing.T) {
-	a := []int32{8, 320, 1536, 1544, 266752, 266800, 791088}
+	a := []int{8, 320, 1536, 1544, 266752, 266800, 791088}
 	vec := CreateVectorFromArray(a)
 	it := NewFetchVec(vec)
 	unpack := NewUnpackVec(it)
@@ -55,7 +55,7 @@ func TestFetchUnpackVector(t *testing.T) {
 		if !ok {
 			break
 		}
-		if v != a[i] {
+		if v != int32(a[i]) {
 			t.Fatal("Not equal", v, a[i], i)
 		}
 		i++
@@ -73,7 +73,7 @@ func TestFetchUnpackVector(t *testing.T) {
 		if !ok {
 			break
 		}
-		if v != a[i] {
+		if v != int32(a[i]) {
 			t.Fatal("Not equal", v, a[i], i)
 		}
 		i++

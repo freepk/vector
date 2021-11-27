@@ -19,7 +19,7 @@ func CreateEmptyVector() (v vector) {
 	return
 }
 
-func CreateVectorFromArray(a []int32) (v vector) {
+func CreateVectorFromArray(a []int) (v vector) {
 	v.Reset()
 	for _, x := range a {
 		v.Add(uint32(x))
