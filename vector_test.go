@@ -157,18 +157,18 @@ func BenchmarkArrayIntersect(b *testing.B) {
 
 func BenchmarkVectorIntersect(b *testing.B) {
 	a0 := randArray(firstArraySize, maxArrayValue)
-	v0 := newVector()
+	v0 := CreateEmptyVector()
 	for _, x := range a0 {
-		v0.addUint24(uint32(x))
+		v0.Add(uint32(x))
 	}
 	a1 := randArray(secondArraySize, maxArrayValue)
-	v1 := newVector()
+	v1 := CreateEmptyVector()
 	for _, x := range a1 {
-		v1.addUint24(uint32(x))
+		v1.Add(uint32(x))
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		intersectVec(v0, v1)
+		intersectVec(&v0, &v1)
 	}
 }
 
@@ -213,17 +213,17 @@ func BenchmarkArrayUnion(b *testing.B) {
 
 func BenchmarkVectorUnion(b *testing.B) {
 	a0 := randArray(firstArraySize, maxArrayValue)
-	v0 := newVector()
+	v0 := CreateEmptyVector()
 	for _, x := range a0 {
-		v0.addUint24(uint32(x))
+		v0.Add(uint32(x))
 	}
 	a1 := randArray(secondArraySize, maxArrayValue)
-	v1 := newVector()
+	v1 := CreateEmptyVector()
 	for _, x := range a1 {
-		v1.addUint24(uint32(x))
+		v1.Add(uint32(x))
 	}
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		unionVec(v0, v1)
+		unionVec(&v0, &v1)
 	}
 }
