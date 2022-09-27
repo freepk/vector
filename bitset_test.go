@@ -10,7 +10,7 @@ func BenchmarkBytesToBits(b *testing.B) {
 	}
 }
 
-func BenchmarkBitsToBitesDump_100K(b *testing.B) {
+func BenchmarkBitsToBytesDump_100K(b *testing.B) {
 	s := make([][4]uint64, 100000)
 	for i := 0; i < len(s); i++ {
 		s[i][0] = uint64(i)
@@ -21,12 +21,12 @@ func BenchmarkBitsToBitesDump_100K(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		x := make([]byte, 256)
 		for k := 0; k < len(s); k++ {
-			_ = bitsToBytesDump(s[i], x)
+			_ = bitsToBytesDump(s[k], x)
 		}
 	}
 }
 
-func BenchmarkBitsToBites_100K(b *testing.B) {
+func BenchmarkBitsToBytes_100K(b *testing.B) {
 	s := make([][4]uint64, 100000)
 	for i := 0; i < len(s); i++ {
 		s[i][0] = uint64(i)
@@ -37,12 +37,12 @@ func BenchmarkBitsToBites_100K(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		x := make([]byte, 256)
 		for k := 0; k < len(s); k++ {
-			_ = bitsToBytes(s[i], x)
+			_ = bitsToBytes(s[k], x)
 		}
 	}
 }
 
-func BenchmarkBitsToBitesDump_500K(b *testing.B) {
+func BenchmarkBitsToBytesDump_500K(b *testing.B) {
 	s := make([][4]uint64, 500000)
 	for i := 0; i < len(s); i++ {
 		s[i][0] = uint64(i)
@@ -53,12 +53,12 @@ func BenchmarkBitsToBitesDump_500K(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		x := make([]byte, 256)
 		for k := 0; k < len(s); k++ {
-			_ = bitsToBytesDump(s[i], x)
+			_ = bitsToBytesDump(s[k], x)
 		}
 	}
 }
 
-func BenchmarkBitsToBites_500K(b *testing.B) {
+func BenchmarkBitsToBytes_500K(b *testing.B) {
 	s := make([][4]uint64, 500000)
 	for i := 0; i < len(s); i++ {
 		s[i][0] = uint64(i)
@@ -69,7 +69,7 @@ func BenchmarkBitsToBites_500K(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		x := make([]byte, 256)
 		for k := 0; k < len(s); k++ {
-			_ = bitsToBytes(s[i], x)
+			_ = bitsToBytes(s[k], x)
 		}
 	}
 }
