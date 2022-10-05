@@ -19,6 +19,7 @@ func BenchmarkIntersectVecIter(b *testing.B) {
 		NewVectorIter(v0),
 		NewVectorIter(v1),
 	)
+	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		it.Reset()
 		for {
