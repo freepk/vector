@@ -5,6 +5,12 @@ import (
 	"time"
 )
 
+const (
+	firstArraySize  = 128 * 1024
+	secondArraySize = 1024 * 1024
+	maxArrayValue   = 16 * 1024 * 1024
+)
+
 func init() {
 	rand.Seed(time.Now().UTC().UnixNano())
 }
