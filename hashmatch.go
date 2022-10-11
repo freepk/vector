@@ -40,43 +40,56 @@ func (hm *hashmatch) apply(b []uint8) {
 }
 
 func (hm *hashmatch) inter(b []uint8) (r uint8) {
+
 	i := 8
 	n := len(b)
+
 	for i <= n {
 		p := (*[8]uint8)(unsafe.Pointer(&b[i-8]))
+		x := hm.temp[p[0]]
 		hm.temp[r] = p[0]
-		r += hm.temp[hm.temp[r]]
+		r += x
+		x = hm.temp[p[1]]
 		hm.temp[r] = p[1]
-		r += hm.temp[hm.temp[r]]
+		r += x
+		x = hm.temp[p[2]]
 		hm.temp[r] = p[2]
-		r += hm.temp[hm.temp[r]]
+		r += x
+		x = hm.temp[p[3]]
 		hm.temp[r] = p[3]
-		r += hm.temp[hm.temp[r]]
+		r += x
+		x = hm.temp[p[4]]
 		hm.temp[r] = p[4]
-		r += hm.temp[hm.temp[r]]
+		r += x
+		x = hm.temp[p[5]]
 		hm.temp[r] = p[5]
-		r += hm.temp[hm.temp[r]]
+		r += x
+		x = hm.temp[p[6]]
 		hm.temp[r] = p[6]
-		r += hm.temp[hm.temp[r]]
+		r += x
+		x = hm.temp[p[7]]
 		hm.temp[r] = p[7]
-		r += hm.temp[hm.temp[r]]
+		r += x
 		i += 8
 	}
 	i -= 8
 	i += 2
 	for i <= n {
 		p := (*[8]uint8)(unsafe.Pointer(&b[i-2]))
+		x := hm.temp[p[0]]
 		hm.temp[r] = p[0]
-		r += hm.temp[hm.temp[r]]
+		r += x
+		x = hm.temp[p[1]]
 		hm.temp[r] = p[1]
-		r += hm.temp[hm.temp[r]]
+		r += x
 		i += 2
 	}
 	i -= 2
 	i += 1
 	if i == n {
+		x := hm.temp[b[n-1]]
 		hm.temp[r] = b[n-1]
-		r += hm.temp[hm.temp[r]]
+		r += x
 	}
 	return
 }
