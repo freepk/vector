@@ -79,7 +79,6 @@ func (hm *hashmatch) inter(b []uint8) (r uint8) {
 			r += x
 			i += 8
 		}
-
 	}
 	i -= 8
 	i += 2
