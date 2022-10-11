@@ -36,8 +36,8 @@ func (it *IntersectIter) Next() (ab uint16, at []uint8, ok bool) {
 				return
 			}
 		} else {
-			it.reset()
-			it.set(at)
+			it.clear()
+			it.apply(at)
 			n := it.inter(bt)
 			if n > 0 {
 				at = it.temp[:n]
