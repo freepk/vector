@@ -76,7 +76,7 @@ func (vi *VectorIter) Next() (base uint16, tail []uint8, ok bool) {
 	i := vi.pos
 	base = uint16(vi.vec.data[i])
 	i++
-	base += uint16(vi.vec.data[i] << 8)
+	base += uint16(vi.vec.data[i]) << 8
 	i++
 	size := vi.vec.data[i]
 	i++
