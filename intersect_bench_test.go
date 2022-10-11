@@ -4,9 +4,9 @@ import (
 	"testing"
 )
 
-func BenchmarkIntersectVecIter(b *testing.B) {
-	a0 := randArray(firstArraySize, maxArrayValue)
-	a1 := randArray(secondArraySize, maxArrayValue)
+func BenchmarkVectorIterIntersect(b *testing.B) {
+	a0 := randArray(firstArraySize, secondArraySize)
+	a1 := randArray(secondArraySize, secondArraySize)
 	v0 := NewVector()
 	v1 := NewVector()
 	for _, n := range a0 {

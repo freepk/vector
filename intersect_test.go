@@ -21,8 +21,10 @@ func TestIntersectIter(t *testing.T) {
 	)
 	it.Reset()
 	for {
-		if _, _, ok := it.Next(); !ok {
+		base, tail, ok := it.Next()
+		if !ok {
 			break
 		}
+		t.Log(base, tail)
 	}
 }

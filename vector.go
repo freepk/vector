@@ -70,19 +70,18 @@ func (vi *VectorIter) hasNext() bool {
 }
 
 func (vi *VectorIter) Next() (base uint16, tail []uint8, ok bool) {
-	if vi.hasNext() {
-		i := vi.pos
-		base = uint16(vi.vec.data[i])
-		i++
-		base += uint16(vi.vec.data[i] << 8)
-		i++
-		size := vi.vec.data[i]
-		i++
-		vi.pos = i + int(size)
-		tail = vi.vec.data[i:vi.pos]
-		ok = true
+	if !vi.hasNext() {
 		return
 	}
-	ok = false
+	i := vi.pos
+	base = uint16(vi.vec.data[i])
+	i++
+	base += uint16(vi.vec.data[i] << 8)
+	i++
+	size := vi.vec.data[i]
+	i++
+	vi.pos = i + int(size)
+	tail = vi.vec.data[i:vi.pos]
+	ok = true
 	return
 }
