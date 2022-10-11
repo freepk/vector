@@ -10,6 +10,10 @@ func NewVector() *Vector {
 	return &Vector{}
 }
 
+func NewVectorEx(data []uint8, last, test int) *Vector {
+	return &Vector{data: data, last: last, test: test}
+}
+
 func (v *Vector) Add(n int) {
 	m := len(v.data)
 	a := uint8(n >> 16)
