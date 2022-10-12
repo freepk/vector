@@ -22,7 +22,7 @@ func (v *Vector) Add(n int) {
 	if m == 0 {
 		v.last = m
 		v.test = n
-		v.data = append(v.data, b, a, 1, c)
+		v.data = append(v.data, b, a, 0, c)
 		return
 	}
 	if n > v.test {
@@ -39,7 +39,7 @@ func (v *Vector) Add(n int) {
 		}
 		v.last = m
 		v.test = n
-		v.data = append(v.data, b, a, 1, c)
+		v.data = append(v.data, b, a, 0, c)
 		return
 	}
 }
@@ -84,7 +84,7 @@ func (vi *VectorIter) Next() (base uint16, tail []uint8, ok bool) {
 	i++
 	size := vi.vec.data[i]
 	i++
-	vi.pos = i + int(size)
+	vi.pos = i + int(size) + 1
 	tail = vi.vec.data[i:vi.pos]
 	ok = true
 	return
