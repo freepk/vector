@@ -30,25 +30,27 @@ func (it *IntersectIter) Next() (ab uint16, at []uint8, ok bool) {
 			if ab, at, ok = it.a.Next(); !ok {
 				return
 			}
-		} else if ab > bb {
+			continue
+		}
+		if ab > bb {
 			if bb, bt, ok = it.b.Next(); !ok {
 				return
 			}
-		} else {
-			it.clear()
-			it.apply(at)
-			n := it.inter(bt)
-			if n > 0 {
-				at = it.temp[:n]
-				ok = true
-				return
-			}
-			if ab, at, ok = it.a.Next(); !ok {
-				return
-			}
-			if bb, bt, ok = it.b.Next(); !ok {
-				return
-			}
+			continue
+		}
+		it.clear()
+		it.apply(at)
+		n := it.inter(bt)
+		if n > 0 {
+			at = it.temp[:n]
+			ok = true
+			return
+		}
+		if ab, at, ok = it.a.Next(); !ok {
+			return
+		}
+		if bb, bt, ok = it.b.Next(); !ok {
+			return
 		}
 	}
 }
