@@ -5,14 +5,12 @@ import (
 )
 
 func BenchmarkVectorIterIntersect(b *testing.B) {
-	a0 := randArray(firstArraySize, secondArraySize)
-	a1 := randArray(secondArraySize, secondArraySize)
 	v0 := NewVector()
 	v1 := NewVector()
-	for _, n := range a0 {
+	for _, n := range firstArrayInt {
 		v0.Add(n)
 	}
-	for _, n := range a1 {
+	for _, n := range secondArrayInt {
 		v1.Add(n)
 	}
 	it := NewIntersectIter(

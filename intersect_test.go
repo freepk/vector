@@ -25,6 +25,7 @@ func TestIntersectIter(t *testing.T) {
 		if !ok {
 			break
 		}
-		t.Log(base, tail)
+		_ = base
+		_ = tail
 	}
 }

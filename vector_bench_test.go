@@ -5,9 +5,8 @@ import (
 )
 
 func BenchmarkVectorIterNext(b *testing.B) {
-	a0 := randArray(firstArraySize, secondArraySize)
 	v0 := NewVector()
-	for _, n := range a0 {
+	for _, n := range secondArrayInt {
 		v0.Add(n)
 	}
 	it := NewVectorIter(v0)

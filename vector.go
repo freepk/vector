@@ -11,7 +11,10 @@ func NewVector() *Vector {
 }
 
 func NewVectorEx(data []uint8, last, test int) *Vector {
-	return &Vector{data: data, last: last, test: test}
+	return &Vector{
+		data: data,
+		last: last,
+		test: test}
 }
 
 func (v *Vector) Add(n int) {
@@ -82,9 +85,9 @@ func (vi *VectorIter) Next() (base uint16, tail []uint8, ok bool) {
 	i++
 	base += uint16(vi.vec.data[i]) << 8
 	i++
-	size := vi.vec.data[i]
+	size := int(vi.vec.data[i]) + 1
 	i++
-	vi.pos = i + int(size) + 1
+	vi.pos = i + size
 	tail = vi.vec.data[i:vi.pos]
 	ok = true
 	return
