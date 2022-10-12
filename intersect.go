@@ -1,55 +1,54 @@
 package vector
 
 type IntersectIter struct {
-	hashmatch
-	a, b Iterator
+	ai Iterator
+	bi Iterator
+	hm HashMatch
 }
 
 func NewIntersectIter(a, b Iterator) *IntersectIter {
-	it := &IntersectIter{a: a, b: b}
+	it := &IntersectIter{ai: a, bi: b}
 	it.Reset()
 	return it
 }
 
 func (it *IntersectIter) Reset() {
-	it.a.Reset()
-	it.b.Reset()
+	it.ai.Reset()
+	it.bi.Reset()
 }
 
 func (it *IntersectIter) Next() (ab uint16, at []uint8, ok bool) {
 	var bb uint16
 	var bt []uint8
-	if ab, at, ok = it.a.Next(); !ok {
+	if ab, at, ok = it.ai.Next(); !ok {
 		return
 	}
-	if bb, bt, ok = it.b.Next(); !ok {
+	if bb, bt, ok = it.bi.Next(); !ok {
 		return
 	}
 	for {
 		if ab < bb {
-			if ab, at, ok = it.a.Next(); !ok {
+			if ab, at, ok = it.ai.Next(); !ok {
 				return
 			}
 			continue
 		}
 		if ab > bb {
-			if bb, bt, ok = it.b.Next(); !ok {
+			if bb, bt, ok = it.bi.Next(); !ok {
 				return
 			}
 			continue
 		}
-		it.clear()
-		it.apply(at)
-		n := it.inter(bt)
-		if n > 0 {
-			at = it.temp[:n]
-			ok = true
+		it.hm.Clear()
+		it.hm.Apply(at)
+		at = it.hm.InterZip(bt)
+		if len(at) > 0 {
 			return
 		}
-		if ab, at, ok = it.a.Next(); !ok {
+		if ab, at, ok = it.ai.Next(); !ok {
 			return
 		}
-		if bb, bt, ok = it.b.Next(); !ok {
+		if bb, bt, ok = it.bi.Next(); !ok {
 			return
 		}
 	}
