@@ -11,5 +11,7 @@ func TestHashMatch(t *testing.T) {
 	}
 	hm := NewHashMatch()
 	hm.Apply(a)
-	t.Log(hm.InterZip(a))
+	if len(hm.InterZip(a)) != 256 {
+		t.Fail()
+	}
 }
