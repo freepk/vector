@@ -2,8 +2,7 @@ package vector
 
 type IntersectIter struct {
 	hashmatch
-	a Iterator
-	b Iterator
+	a, b Iterator
 }
 
 func NewIntersectIter(a, b Iterator) *IntersectIter {

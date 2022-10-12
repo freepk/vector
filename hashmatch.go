@@ -45,7 +45,7 @@ func (hm *hashmatch) apply(b []uint8) {
 	}
 }
 
-func (hm *hashmatch) inter(b []uint8) (r uint8) {
+func (hm *hashmatch) inter(b []uint8) (r int) {
 	i := 8
 	n := len(b)
 	var x uint8
@@ -55,28 +55,28 @@ func (hm *hashmatch) inter(b []uint8) (r uint8) {
 			p = (*[8]uint8)(unsafe.Pointer(&b[i-8]))
 			x = hm.temp[p[0]]
 			hm.temp[r] = p[0]
-			r += x
+			r += int(x)
 			x = hm.temp[p[1]]
 			hm.temp[r] = p[1]
-			r += x
+			r += int(x)
 			x = hm.temp[p[2]]
 			hm.temp[r] = p[2]
-			r += x
+			r += int(x)
 			x = hm.temp[p[3]]
 			hm.temp[r] = p[3]
-			r += x
+			r += int(x)
 			x = hm.temp[p[4]]
 			hm.temp[r] = p[4]
-			r += x
+			r += int(x)
 			x = hm.temp[p[5]]
 			hm.temp[r] = p[5]
-			r += x
+			r += int(x)
 			x = hm.temp[p[6]]
 			hm.temp[r] = p[6]
-			r += x
+			r += int(x)
 			x = hm.temp[p[7]]
 			hm.temp[r] = p[7]
-			r += x
+			r += int(x)
 			i += 8
 		}
 	}
@@ -88,10 +88,10 @@ func (hm *hashmatch) inter(b []uint8) (r uint8) {
 			p = (*[2]uint8)(unsafe.Pointer(&b[i-2]))
 			x = hm.temp[p[0]]
 			hm.temp[r] = p[0]
-			r += x
+			r += int(x)
 			x = hm.temp[p[1]]
 			hm.temp[r] = p[1]
-			r += x
+			r += int(x)
 			i += 2
 		}
 	}
@@ -100,7 +100,7 @@ func (hm *hashmatch) inter(b []uint8) (r uint8) {
 	if i == n {
 		x = hm.temp[b[n-1]]
 		hm.temp[r] = b[n-1]
-		r += x
+		r += int(x)
 	}
 	return
 }
