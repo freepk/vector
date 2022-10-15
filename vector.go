@@ -53,6 +53,10 @@ func (v *Vector) Clear() {
 	v.data = v.data[:0]
 }
 
+func (v *Vector) Bytes() []uint8 {
+	return v.data
+}
+
 type VectorIter struct {
 	pos int
 	vec *Vector
