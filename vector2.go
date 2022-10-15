@@ -3,6 +3,8 @@ package vector
 import "unsafe"
 import "math/bits"
 
+
+
 type Vector2 struct {
 	last int
 	data []uint16

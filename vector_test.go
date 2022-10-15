@@ -51,12 +51,7 @@ func TestVectorDump(t *testing.T) {
 	for _, n := range firstArrayInt {
 		vec.Add(n)
 	}
-	os.WriteFile("first.vector.bin", vec.Bytes(), 0666)
-	vec.Clear()
-	for _, n := range secondArrayInt {
-		vec.Add(n)
-	}
-	os.WriteFile("second.vector.bin", vec.Bytes(), 0666)
+	os.WriteFile("vector.bin", vec.Bytes(), 0666)
 }
 
 func TestVector2Dump(t *testing.T) {
@@ -64,10 +59,41 @@ func TestVector2Dump(t *testing.T) {
 	for _, n := range firstArrayInt {
 		vec.Add(n)
 	}
-	os.WriteFile("first.vector2.bin", vec.Bytes(), 0666)
-	vec.Clear()
+	os.WriteFile("vector2.bin", vec.Bytes(), 0666)
+}
+
+func BenchmarkVectorNext(b *testing.B) {
+	vec := NewVector()
 	for _, n := range secondArrayInt {
 		vec.Add(n)
 	}
-	os.WriteFile("second.vector2.bin", vec.Bytes(), 0666)
+	it := NewVectorIter(vec)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		it.Reset()
+		for {
+			_, _, ok := it.Next()
+			if !ok {
+				break
+			}
+		}
+	}
+}
+
+func BenchmarkVector2Next(b *testing.B) {
+	vec := NewVector2()
+	for _, n := range secondArrayInt {
+		vec.Add(n)
+	}
+	it := NewVector2Iter(vec)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		it.Reset()
+		for {
+			_, _, _, ok := it.Next()
+			if !ok {
+				break
+			}
+		}
+	}
 }
