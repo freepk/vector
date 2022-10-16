@@ -12,8 +12,8 @@ const (
 )
 
 var (
-	firstArrayInt  = randArray(firstArraySize, firstArraySize * 16)
-	secondArrayInt = randArray(secondArraySize, secondArraySize * 16)
+	firstArrayInt  = randArray(firstArraySize, firstArraySize*8)
+	secondArrayInt = randArray(secondArraySize, secondArraySize*8)
 )
 
 func TestVectorAdd(t *testing.T) {
@@ -97,10 +97,13 @@ func BenchmarkVector2Next(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		it.Reset()
 		for {
-			_, _, _, ok := it.Next()
+			base, mask, data, ok := it.Next()
 			if !ok {
 				break
 			}
+			_ = base
+			_ = mask
+			_ = data
 		}
 	}
 }
