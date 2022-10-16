@@ -72,5 +72,6 @@ func randArray(n, m int) []int {
 	}
 	heapSort(a)
 	a = dedupInts(a)
+	println(n, m, a[len(a)-1])
 	return a
 }
