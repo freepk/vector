@@ -21,12 +21,6 @@ func (v *Vector) Bytes() []uint8 {
 	return v.data
 }
 
-// func NewVectorEx(data []uint8, last, test int) *Vector {
-// 	return &Vector{
-// 		data: data,
-// 		last: last}
-// }
-
 type vectorElem struct {
 	base uint16
 	size uint8
@@ -98,15 +92,12 @@ func (vi *VectorIter) Next() (base uint16, data []uint8, ok bool) {
 	if !vi.hasNext() {
 		return
 	}
-	i := vi.pos
-	base = uint16(vi.vec.data[i])
-	i++
-	base += uint16(vi.vec.data[i]) << 8
-	i++
-	size := int(vi.vec.data[i]) + 1
-	i++
-	vi.pos = i + size
-	data = vi.vec.data[i:vi.pos]
+	elem := vi.vec.elem(vi.pos)
+	base = elem.base
+	vi.pos += 3
+	pos := vi.pos
+	vi.pos += int(elem.size) + 1
+	data = vi.vec.data[pos:vi.pos]
 	ok = true
 	return
 }

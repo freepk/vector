@@ -1,14 +1,14 @@
 package vector
 
 import (
-	// "os"
+	"os"
 	"testing"
 )
 
 const (
-	firstArraySize  = 256 * 1024
+	firstArraySize  = 128 * 1024
 	secondArraySize = 1024 * 1024
-	maxArrayValue   = 4 * 1024 * 1024
+	maxArrayValue   = 2 * 1024 * 1024
 )
 
 var (
@@ -32,7 +32,6 @@ func TestVectorAdd(t *testing.T) {
 		_ = data
 		n++
 	}
-	t.Log(n)
 }
 
 func TestVector2Add(t *testing.T) {
@@ -51,54 +50,52 @@ func TestVector2Add(t *testing.T) {
 		_ = data
 		n++
 	}
-	t.Log(n)
 }
 
-func TestVectorCompareBaseCount(t *testing.T) {
-	n := len(secondArrayInt)
-	v1 := NewVector()
-	v2 := NewVector2()
-	it1 := NewVectorIter(v1)
-	it2 := NewVector2Iter(v2)
-	for n > 0 {
-		v1.Clear()
-		v2.Clear()
-		for _, v := range secondArrayInt[:n] {
-			v1.Add(uint32(v))
-			v2.Add(uint32(v))
-		}
-		it1.Reset()
-		it2.Reset()
-		for {
-			t.Log("Subsize", n)
-			base1, _, ok1 := it1.Next()
-			base2, _, ok2 := it2.Next()
-			if base1 != base2 || ok1 != ok2 {
-				t.Fatal("Broken data", base1, base2)
-			}
-			if !ok1 {
-				break
-			}
-		}
-		n--
+// func TestVectorCompareBaseCount(t *testing.T) {
+// 	n := len(firstArrayInt)
+// 	v1 := NewVector()
+// 	v2 := NewVector2()
+// 	it1 := NewVectorIter(v1)
+// 	it2 := NewVector2Iter(v2)
+// 	for n > 0 {
+// 		v1.Clear()
+// 		v2.Clear()
+// 		for _, v := range firstArrayInt[:n] {
+// 			v1.Add(uint32(v))
+// 			v2.Add(uint32(v))
+// 		}
+// 		it1.Reset()
+// 		it2.Reset()
+// 		for {
+// 			base1, _, ok1 := it1.Next()
+// 			base2, _, ok2 := it2.Next()
+// 			if base1 != base2 || ok1 != ok2 {
+// 				t.Fatal("Broken data", base1, base2)
+// 			}
+// 			if !ok1 {
+// 				break
+// 			}
+// 		}
+// 		n--
+// 	}
+// }
+
+func TestVectorDump(t *testing.T) {
+	vec := NewVector()
+	for _, v := range secondArrayInt {
+		vec.Add(uint32(v))
 	}
+	os.WriteFile("vector.bin", vec.Bytes(), 0666)
 }
 
-// func TestVectorDump(t *testing.T) {
-// 	vec := NewVector()
-// 	for _, v := range secondArrayInt {
-// 		vec.Add(uint32(v))
-// 	}
-// 	os.WriteFile("vector.bin", vec.Bytes(), 0666)
-// }
-
-// func TestVector2Dump(t *testing.T) {
-// 	vec := NewVector2()
-// 	for _, v := range secondArrayInt {
-// 		vec.Add(uint32(v))
-// 	}
-// 	os.WriteFile("vector2.bin", vec.Bytes(), 0666)
-// }
+func TestVector2Dump(t *testing.T) {
+	vec := NewVector2()
+	for _, v := range secondArrayInt {
+		vec.Add(uint32(v))
+	}
+	os.WriteFile("vector2.bin", vec.Bytes(), 0666)
+}
 
 func BenchmarkVectorNext(b *testing.B) {
 	vec := NewVector()

@@ -49,13 +49,13 @@ func (v *Vector2) Add(n uint32) {
 	last := len(v.data)
 	base, mask, data := extract(n)
 	if last == 0 {
-		elem := newVector2Elem(base, 1, mask)
+		elem := newVector2Elem(base, 0, mask)
 		v.last = last
 		v.data = append(v.data, elem.uint32(), data)
 	} else {
 		elem := v.lastElem()
 		if base > elem.base {
-			elem := newVector2Elem(base, 1, mask)
+			elem := newVector2Elem(base, 0, mask)
 			v.last = last
 			v.data = append(v.data, elem.uint32(), data)
 		} else {
@@ -99,17 +99,16 @@ func (vi *Vector2Iter) hasNext() bool {
 	return true
 }
 
-func (vi *Vector2Iter) Next() (base uint16, data [4]uint64, ok bool) {
+func (vi *Vector2Iter) Next() (base uint16, data []uint32, ok bool) {
 	if !vi.hasNext() {
 		return
 	}
-	elem := vi.vec.lastElem()
+	elem := vi.vec.elem(vi.pos)
 	base = elem.base
-	//mask = elem.mask
 	vi.pos++
-	//pos := vi.pos
-	vi.pos += int(elem.size)
-	//data = vi.vec.data[pos:vi.pos]
+	pos := vi.pos
+	vi.pos += int(elem.size) + 1
+	data = vi.vec.data[pos:vi.pos]
 	ok = true
 	return
 }
