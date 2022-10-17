@@ -16,25 +16,6 @@ var (
 	secondArrayInt = randArray(secondArraySize, maxArrayValue)
 )
 
-func TestBitmapAdd(t *testing.T) {
-	vec := NewBitmap()
-	for _, n := range secondArrayInt {
-		vec.Add(uint32(n))
-	}
-	n := 0
-	it := NewBitmapIter(vec)
-	for {
-		base, data, ok := it.Next()
-		if !ok {
-			break
-		}
-		_ = base
-		_ = data
-		n++
-	}
-	t.Log(n)
-}
-
 func TestVectorAdd(t *testing.T) {
 	vec := NewVector()
 	for _, n := range secondArrayInt {
@@ -89,14 +70,6 @@ func TestVector2Dump(t *testing.T) {
 	os.WriteFile("vector2.bin", vec.Bytes(), 0666)
 }
 
-func TestBitmap2Dump(t *testing.T) {
-	vec := NewBitmap()
-	for _, n := range secondArrayInt {
-		vec.Add(uint32(n))
-	}
-	os.WriteFile("bitmap.bin", vec.Bytes(), 0666)
-}
-
 func BenchmarkVectorNext(b *testing.B) {
 	vec := NewVector()
 	for _, n := range secondArrayInt {
@@ -121,26 +94,6 @@ func BenchmarkVector2Next(b *testing.B) {
 		vec.Add(uint32(n))
 	}
 	it := NewVector2Iter(vec)
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		it.Reset()
-		for {
-			base, data, ok := it.Next()
-			if !ok {
-				break
-			}
-			_ = base
-			_ = data
-		}
-	}
-}
-
-func BenchmarkBitmapNext(b *testing.B) {
-	vec := NewBitmap()
-	for _, n := range secondArrayInt {
-		vec.Add(uint32(n))
-	}
-	it := NewBitmapIter(vec)
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		it.Reset()
