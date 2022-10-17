@@ -3,7 +3,7 @@ package vector
 import "unsafe"
 
 type Vector2 struct {
-	last uint32
+	last int
 	data []uint32
 }
 
@@ -23,38 +23,42 @@ func extract(n uint32) (base uint16, mask uint8, data uint32) {
 	return
 }
 
-type vectorElem struct {
+type vector2Elem struct {
 	base uint16
 	size uint8
 	mask uint8
 }
 
-func newVectorElem(base uint16, size, mask uint8) *vectorElem {
-	return &vectorElem{base, size, mask}
+func newVector2Elem(base uint16, size, mask uint8) *vector2Elem {
+	return &vector2Elem{base, size, mask}
 }
 
-func (ve *vectorElem) uint32() *uint32 {
-	return (*uint32)(unsafe.Pointer(ve))
+func (ve *vector2Elem) uint32() uint32 {
+	return *(*uint32)(unsafe.Pointer(ve))
 }
 
-func (v *Vector2) elem(n uint32) *vectorElem {
-	return (*vectorElem)(unsafe.Pointer(&v.data[n]))
+func (v *Vector2) elem(n int) *vector2Elem {
+	return (*vector2Elem)(unsafe.Pointer(&v.data[n]))
 }
 
-func (v *Vector2) lastElem() *vectorElem {
+func (v *Vector2) lastElem() *vector2Elem {
 	return v.elem(v.last)
 }
 
 func (v *Vector2) Add(n uint32) {
-	last := uint32(len(v.data))
+	last := len(v.data)
 	base, mask, data := extract(n)
 	if last == 0 {
-		elem := newVectorElem(base, 1, mask)
+		elem := newVector2Elem(base, 1, mask)
 		v.last = last
-		v.data = append(v.data, *elem.uint32(), data)
+		v.data = append(v.data, elem.uint32(), data)
 	} else {
 		elem := v.lastElem()
-		if base == elem.base {
+		if base > elem.base {
+			elem := newVector2Elem(base, 1, mask)
+			v.last = last
+			v.data = append(v.data, elem.uint32(), data)
+		} else {
 			if mask > elem.mask {
 				elem.size++
 				elem.mask |= mask
@@ -62,10 +66,6 @@ func (v *Vector2) Add(n uint32) {
 			} else {
 				v.data[(last - 1)] |= data
 			}
-		} else {
-			elem := newVectorElem(base, 1, mask)
-			v.last = last
-			v.data = append(v.data, *elem.uint32(), data)
 		}
 	}
 }
@@ -77,7 +77,7 @@ func (v *Vector2) Bytes() []uint8 {
 }
 
 type Vector2Iter struct {
-	pos uint32
+	pos int
 	vec *Vector2
 }
 
@@ -108,7 +108,7 @@ func (vi *Vector2Iter) Next() (base uint16, data [4]uint64, ok bool) {
 	//mask = elem.mask
 	vi.pos++
 	//pos := vi.pos
-	vi.pos += uint32(elem.size)
+	vi.pos += int(elem.size)
 	//data = vi.vec.data[pos:vi.pos]
 	ok = true
 	return

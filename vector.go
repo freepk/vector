@@ -1,5 +1,7 @@
 package vector
 
+import "unsafe"
+
 type Vector struct {
 	last int
 	test int
@@ -10,51 +12,63 @@ func NewVector() *Vector {
 	return &Vector{}
 }
 
-func NewVectorEx(data []uint8, last, test int) *Vector {
-	return &Vector{
-		data: data,
-		last: last,
-		test: test}
-}
-
-func (v *Vector) Add(n int) {
-	m := len(v.data)
-	a := uint8(n >> 16)
-	b := uint8(n >> 8)
-	c := uint8(n)
-	if m == 0 {
-		v.last = m
-		v.test = n
-		v.data = append(v.data, b, a, 0, c)
-		return
-	}
-	if n > v.test {
-		i := v.last
-		if b == v.data[i] {
-			i++
-			if a == v.data[i] {
-				i++
-				v.test = n
-				v.data[i]++
-				v.data = append(v.data, c)
-				return
-			}
-		}
-		v.last = m
-		v.test = n
-		v.data = append(v.data, b, a, 0, c)
-		return
-	}
-}
-
 func (v *Vector) Clear() {
 	v.last = 0
-	v.test = 0
 	v.data = v.data[:0]
 }
 
 func (v *Vector) Bytes() []uint8 {
 	return v.data
+}
+
+// func NewVectorEx(data []uint8, last, test int) *Vector {
+// 	return &Vector{
+// 		data: data,
+// 		last: last}
+// }
+
+type vectorElem struct {
+	base uint16
+	size uint8
+}
+
+func newVectorElem(base uint16, size uint8) *vectorElem {
+	return &vectorElem{base, size}
+}
+
+func (ve *vectorElem) bytes() []uint8 {
+	ptr := (*[3]uint8)(unsafe.Pointer(ve))
+	return ptr[:3]
+}
+
+func (v *Vector) elem(n int) *vectorElem {
+	return (*vectorElem)(unsafe.Pointer(&v.data[n]))
+}
+
+func (v *Vector) lastElem() *vectorElem {
+	return v.elem(v.last)
+}
+
+func (v *Vector) Add(n uint32) {
+	last := len(v.data)
+	base := uint16(n >> 8)
+	data := uint8(n)
+	if last == 0 {
+		v.last = last
+		v.data = append(v.data, newVectorElem(base, 0).bytes()...)
+		v.data = append(v.data, data)
+		return
+	} else {
+		elem := v.lastElem()
+		if base > elem.base {
+			v.last = last
+			v.data = append(v.data, newVectorElem(base, 0).bytes()...)
+			v.data = append(v.data, data)
+		} else {
+			elem.size++
+			v.data = append(v.data, data)
+		}
+	}
 }
 
 type VectorIter struct {
