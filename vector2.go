@@ -2,6 +2,27 @@ package vector
 
 import "unsafe"
 
+func extract2(n uint32) (base uint16, mask uint8, data uint32) {
+	base = uint16(n >> 8)
+	mask = 1 << (uint8(n) >> 5)
+	data = 1 << ((uint8(n) << 3) >> 3)
+	return
+}
+
+func encode2(base uint16, size, mask uint8) (n uint32) {
+	n = uint32(base)
+	n |= uint32(size) << 16
+	n |= uint32(mask) << 24
+	return
+}
+
+func decode2(n uint32) (base uint16, size, mask uint8) {
+	base = uint16(n)
+	size = uint8(n >> 16)
+	mask = uint8(n >> 24)
+	return
+}
+
 type Vector2 struct {
 	last int
 	data []uint32
@@ -16,41 +37,20 @@ func (v *Vector2) Clear() {
 	v.data = v.data[:0]
 }
 
-func extract(n uint32) (base uint16, mask uint8, data uint32) {
-	base = uint16(n >> 8)
-	mask = 1 << (uint8(n) >> 5)
-	data = 1 << ((uint8(n) << 3) >> 3)
-	return
-}
-
-func encode(base uint16, size, mask uint8) (n uint32) {
-	n = uint32(base)
-	n |= uint32(size) << 16
-	n |= uint32(mask) << 24
-	return
-}
-
-func decode(n uint32) (base uint16, size, mask uint8) {
-	base = uint16(n)
-	size = uint8(n >> 16)
-	mask = uint8(n >> 24)
-	return
-}
-
 func (v *Vector2) Add(n uint32) {
 	last := len(v.data)
-	base, mask, data := extract(n)
+	base, mask, data := extract2(n)
 	if last == 0 {
 		v.last = last
-		v.data = append(v.data, encode(base, 0, mask), data)
+		v.data = append(v.data, encode2(base, 0, mask), data)
 	} else {
-		_base, _size, _mask := decode(v.data[v.last])
+		_base, _size, _mask := decode2(v.data[v.last])
 		if base > _base {
 			v.last = last
-			v.data = append(v.data, encode(base, 0, mask), data)
+			v.data = append(v.data, encode2(base, 0, mask), data)
 		} else {
 			if mask > _mask {
-				v.data[v.last] = encode(_base, (_size + 1), (_mask | mask))
+				v.data[v.last] = encode2(_base, (_size + 1), (_mask | mask))
 				v.data = append(v.data, data)
 			} else {
 				v.data[(last - 1)] |= data
@@ -59,19 +59,19 @@ func (v *Vector2) Add(n uint32) {
 	}
 }
 
-func (v *Vector2) unpack(data *[4]uint64, pos int) (base uint16, next int) {
-	var size, mask uint8
-	_ = mask
-	base, size, mask = decode(v.data[pos])
-	*data = *(*[4]uint64)(unsafe.Pointer(&v.data[(pos + 1)]))
-	next = pos + 1 + int(size) + 1
-	return
-}
-
 func (v *Vector2) Bytes() []uint8 {
 	n := len(v.data) * 4
 	p := (*[0xffffffff]uint8)(unsafe.Pointer(&v.data[0]))
 	return p[:n]
+}
+
+func (v *Vector2) unpack(data *[4]uint64, pos int) (base uint16, next int) {
+	var size, mask uint8
+	_ = mask
+	base, size, mask = decode2(v.data[pos])
+	*data = *(*[4]uint64)(unsafe.Pointer(&v.data[(pos + 1)]))
+	next = pos + 1 + int(size) + 1
+	return
 }
 
 type Vector2Iter struct {

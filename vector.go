@@ -2,6 +2,20 @@ package vector
 
 import "unsafe"
 
+type vectorElem struct {
+	base uint16
+	size uint8
+}
+
+func newVectorElem(base uint16, size uint8) *vectorElem {
+	return &vectorElem{base, size}
+}
+
+func (ve *vectorElem) bytes() []uint8 {
+	ptr := (*[3]uint8)(unsafe.Pointer(ve))
+	return ptr[:3]
+}
+
 type Vector struct {
 	last int
 	test int
@@ -15,24 +29,6 @@ func NewVector() *Vector {
 func (v *Vector) Clear() {
 	v.last = 0
 	v.data = v.data[:0]
-}
-
-func (v *Vector) Bytes() []uint8 {
-	return v.data
-}
-
-type vectorElem struct {
-	base uint16
-	size uint8
-}
-
-func newVectorElem(base uint16, size uint8) *vectorElem {
-	return &vectorElem{base, size}
-}
-
-func (ve *vectorElem) bytes() []uint8 {
-	ptr := (*[3]uint8)(unsafe.Pointer(ve))
-	return ptr[:3]
 }
 
 func (v *Vector) elem(n int) *vectorElem {
@@ -63,6 +59,10 @@ func (v *Vector) Add(n uint32) {
 			v.data = append(v.data, data)
 		}
 	}
+}
+
+func (v *Vector) Bytes() []uint8 {
+	return v.data
 }
 
 type VectorIter struct {
