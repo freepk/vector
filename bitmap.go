@@ -107,19 +107,19 @@ func (it *BitmapIter) hasNext() bool {
 	return true
 }
 
+type header struct {
+	base uint16
+	part uint8
+	size uint8
+}
+
 func (it *BitmapIter) Next() (base uint16, data [4]uint64, ok bool) {
 	if !it.hasNext() {
 		return
 	}
-	d := it.b.data[it.p]
-	b := uint16(d)
-	d >>= 16
-	p := uint8(d)
-	d >>= 8
-	s := uint8(d)
-	d >>= 8
-	it.p += ((int(s) + 1) / 2) + 1
-	base = b
+	p := (*header)(unsafe.Pointer(&it.b.data[it.p]))
+	it.p += ((int(p.size) + 1) / 2) + 1
+	base = p.base
 	ok = true
 	return
 }
