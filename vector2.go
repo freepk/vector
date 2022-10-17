@@ -105,8 +105,11 @@ func (vi *Vector2Iter) Next() (base uint16, data [4]uint64, ok bool) {
 	}
 	elem := vi.vec.lastElem()
 	base = elem.base
+	//mask = elem.mask
 	vi.pos++
+	//pos := vi.pos
 	vi.pos += uint32(elem.size)
+	//data = vi.vec.data[pos:vi.pos]
 	ok = true
 	return
 }

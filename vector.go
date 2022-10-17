@@ -80,7 +80,7 @@ func (vi *VectorIter) hasNext() bool {
 	return true
 }
 
-func (vi *VectorIter) Next() (base uint16, tail []uint8, ok bool) {
+func (vi *VectorIter) Next() (base uint16, data []uint8, ok bool) {
 	if !vi.hasNext() {
 		return
 	}
@@ -92,7 +92,7 @@ func (vi *VectorIter) Next() (base uint16, tail []uint8, ok bool) {
 	size := int(vi.vec.data[i]) + 1
 	i++
 	vi.pos = i + size
-	tail = vi.vec.data[i:vi.pos]
+	data = vi.vec.data[i:vi.pos]
 	ok = true
 	return
 }
