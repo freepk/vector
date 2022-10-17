@@ -23,45 +23,34 @@ func extract(n uint32) (base uint16, mask uint8, data uint32) {
 	return
 }
 
-type vector2Elem struct {
-	base uint16
-	size uint8
-	mask uint8
+func encode(base uint16, size, mask uint8) (n uint32) {
+	n = uint32(base)
+	n |= uint32(size) << 16
+	n |= uint32(mask) << 24
+	return
 }
 
-func newVector2Elem(base uint16, size, mask uint8) *vector2Elem {
-	return &vector2Elem{base, size, mask}
-}
-
-func (ve *vector2Elem) uint32() uint32 {
-	return *(*uint32)(unsafe.Pointer(ve))
-}
-
-func (v *Vector2) elem(n int) *vector2Elem {
-	return (*vector2Elem)(unsafe.Pointer(&v.data[n]))
-}
-
-func (v *Vector2) lastElem() *vector2Elem {
-	return v.elem(v.last)
+func decode(n uint32) (base uint16, size, mask uint8) {
+	base = uint16(n)
+	size = uint8(n >> 16)
+	mask = uint8(n >> 24)
+	return
 }
 
 func (v *Vector2) Add(n uint32) {
 	last := len(v.data)
 	base, mask, data := extract(n)
 	if last == 0 {
-		elem := newVector2Elem(base, 0, mask)
 		v.last = last
-		v.data = append(v.data, elem.uint32(), data)
+		v.data = append(v.data, encode(base, 0, mask), data)
 	} else {
-		elem := v.lastElem()
-		if base > elem.base {
-			elem := newVector2Elem(base, 0, mask)
+		_base, _size, _mask := decode(v.data[v.last])
+		if base > _base {
 			v.last = last
-			v.data = append(v.data, elem.uint32(), data)
+			v.data = append(v.data, encode(base, 0, mask), data)
 		} else {
-			if mask > elem.mask {
-				elem.size++
-				elem.mask |= mask
+			if mask > _mask {
+				v.data[v.last] = encode(_base, (_size + 1), (_mask | mask))
 				v.data = append(v.data, data)
 			} else {
 				v.data[(last - 1)] |= data
@@ -103,11 +92,11 @@ func (vi *Vector2Iter) Next() (base uint16, data []uint32, ok bool) {
 	if !vi.hasNext() {
 		return
 	}
-	elem := vi.vec.elem(vi.pos)
-	base = elem.base
+	var size uint8
+	base, size, _ = decode(vi.vec.data[vi.pos])
 	vi.pos++
 	pos := vi.pos
-	vi.pos += int(elem.size) + 1
+	vi.pos += int(size) + 1
 	data = vi.vec.data[pos:vi.pos]
 	ok = true
 	return
