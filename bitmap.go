@@ -107,17 +107,19 @@ func (it *BitmapIter) hasNext() bool {
 	return true
 }
 
-// func (vi *Vector2Iter) Next() (base uint16, mask uint8, data []uint32, ok bool) {
-// 	if !vi.hasNext() {
-// 		return
-// 	}
-// 	elem := vi.vec.lastElem()
-// 	base = elem.base
-// 	mask = elem.mask
-// 	vi.pos++
-// 	pos := vi.pos
-// 	vi.pos += uint32(elem.size)
-// 	data = vi.vec.data[pos:vi.pos]
-// 	ok = true
-// 	return
-// }
+func (it *BitmapIter) Next() (base uint16, data [4]uint64, ok bool) {
+	if !it.hasNext() {
+		return
+	}
+	d := it.b.data[it.p]
+	b := uint16(d)
+	d >>= 16
+	p := uint8(d)
+	d >>= 8
+	s := uint8(d)
+	d >>= 8
+	it.p += ((int(s) + 1) / 2) + 1
+	base = b
+	ok = true
+	return
+}

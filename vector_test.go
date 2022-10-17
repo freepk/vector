@@ -7,7 +7,7 @@ import (
 
 const (
 	firstArraySize  = 128 * 1024
-	secondArraySize = 256 * 1024
+	secondArraySize = 1024 * 1024
 	maxArrayValue   = 2 * 1024 * 1024
 )
 
@@ -18,20 +18,21 @@ var (
 
 func TestBitmapAdd(t *testing.T) {
 	vec := NewBitmap()
-	for _, n := range firstArrayInt[:256] {
+	for _, n := range secondArrayInt {
 		vec.Add(uint32(n))
 	}
-	//n := 0
-	//it := NewVectorIter(vec)
-	//for {
-	//	base, data, ok := it.Next()
-	//	if !ok {
-	//		break
-	//	}
-	//	_ = base
-	//	_ = data
-	//	n++
-	//}
+	n := 0
+	it := NewBitmapIter(vec)
+	for {
+		base, data, ok := it.Next()
+		if !ok {
+			break
+		}
+		_ = base
+		_ = data
+		n++
+	}
+	t.Log(n)
 }
 
 func TestVectorAdd(t *testing.T) {
@@ -50,6 +51,7 @@ func TestVectorAdd(t *testing.T) {
 		_ = data
 		n++
 	}
+	t.Log(n)
 }
 
 func TestVector2Add(t *testing.T) {
@@ -69,6 +71,7 @@ func TestVector2Add(t *testing.T) {
 		_ = data
 		n++
 	}
+	t.Log(n)
 }
 
 func TestVectorDump(t *testing.T) {
@@ -129,6 +132,26 @@ func BenchmarkVector2Next(b *testing.B) {
 			}
 			_ = base
 			_ = mask
+			_ = data
+		}
+	}
+}
+
+func BenchmarkBitmapNext(b *testing.B) {
+	vec := NewBitmap()
+	for _, n := range secondArrayInt {
+		vec.Add(uint32(n))
+	}
+	it := NewBitmapIter(vec)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		it.Reset()
+		for {
+			base, data, ok := it.Next()
+			if !ok {
+				break
+			}
+			_ = base
 			_ = data
 		}
 	}
