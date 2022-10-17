@@ -1,7 +1,7 @@
 package vector
 
 import (
-	"os"
+	// "os"
 	"testing"
 )
 
@@ -81,21 +81,21 @@ func TestVector2Add(t *testing.T) {
 // 	}
 // }
 
-func TestVectorDump(t *testing.T) {
-	vec := NewVector()
-	for _, v := range secondArrayInt {
-		vec.Add(uint32(v))
-	}
-	os.WriteFile("vector.bin", vec.Bytes(), 0666)
-}
+// func TestVectorDump(t *testing.T) {
+// 	vec := NewVector()
+// 	for _, v := range secondArrayInt {
+// 		vec.Add(uint32(v))
+// 	}
+// 	os.WriteFile("vector.bin", vec.Bytes(), 0666)
+// }
 
-func TestVector2Dump(t *testing.T) {
-	vec := NewVector2()
-	for _, v := range secondArrayInt {
-		vec.Add(uint32(v))
-	}
-	os.WriteFile("vector2.bin", vec.Bytes(), 0666)
-}
+// func TestVector2Dump(t *testing.T) {
+// 	vec := NewVector2()
+// 	for _, v := range secondArrayInt {
+// 		vec.Add(uint32(v))
+// 	}
+// 	os.WriteFile("vector2.bin", vec.Bytes(), 0666)
+// }
 
 func BenchmarkVectorNext(b *testing.B) {
 	vec := NewVector()
