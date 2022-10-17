@@ -83,3 +83,41 @@ func (bm *Bitmap) Bytes() []uint8 {
 	p := (*[0xffffffff]uint8)(unsafe.Pointer(&bm.data[0]))
 	return p[:n]
 }
+
+type BitmapIter struct {
+	p int
+	b *Bitmap
+}
+
+func NewBitmapIter(b *Bitmap) *BitmapIter {
+	return &BitmapIter{p: 0, b: b}
+}
+
+func (it *BitmapIter) Reset() {
+	it.p = 0
+}
+
+func (it *BitmapIter) hasNext() bool {
+	if len(it.b.data) == 0 {
+		return false
+	}
+	if it.p > it.b.last {
+		return false
+	}
+	return true
+}
+
+// func (vi *Vector2Iter) Next() (base uint16, mask uint8, data []uint32, ok bool) {
+// 	if !vi.hasNext() {
+// 		return
+// 	}
+// 	elem := vi.vec.lastElem()
+// 	base = elem.base
+// 	mask = elem.mask
+// 	vi.pos++
+// 	pos := vi.pos
+// 	vi.pos += uint32(elem.size)
+// 	data = vi.vec.data[pos:vi.pos]
+// 	ok = true
+// 	return
+// }

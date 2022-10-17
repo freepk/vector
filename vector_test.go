@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	firstArraySize  = 8 * 1024
-	secondArraySize = 8 * 1024
+	firstArraySize  = 128 * 1024
+	secondArraySize = 256 * 1024
 	maxArrayValue   = 2 * 1024 * 1024
 )
 
