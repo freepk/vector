@@ -62,12 +62,11 @@ func TestVector2Add(t *testing.T) {
 	n := 0
 	it := NewVector2Iter(vec)
 	for {
-		base, mask, data, ok := it.Next()
+		base, data, ok := it.Next()
 		if !ok {
 			break
 		}
 		_ = base
-		_ = mask
 		_ = data
 		n++
 	}
@@ -126,12 +125,11 @@ func BenchmarkVector2Next(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		it.Reset()
 		for {
-			base, mask, data, ok := it.Next()
+			base, data, ok := it.Next()
 			if !ok {
 				break
 			}
 			_ = base
-			_ = mask
 			_ = data
 		}
 	}

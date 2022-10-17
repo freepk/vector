@@ -85,7 +85,7 @@ func (bm *Bitmap) Bytes() []uint8 {
 }
 
 type BitmapIter struct {
-	p int
+	p uint32
 	b *Bitmap
 }
 
@@ -101,7 +101,7 @@ func (it *BitmapIter) hasNext() bool {
 	if len(it.b.data) == 0 {
 		return false
 	}
-	if it.p > it.b.last {
+	if int(it.p) > it.b.last {
 		return false
 	}
 	return true
@@ -118,7 +118,7 @@ func (it *BitmapIter) Next() (base uint16, data [4]uint64, ok bool) {
 		return
 	}
 	p := (*header)(unsafe.Pointer(&it.b.data[it.p]))
-	it.p += ((int(p.size) + 1) / 2) + 1
+	it.p += ((uint32(p.size) + 1) / 2) + 1
 	base = p.base
 	ok = true
 	return
