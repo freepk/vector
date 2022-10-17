@@ -59,6 +59,15 @@ func (v *Vector2) Add(n uint32) {
 	}
 }
 
+func (v *Vector2) unpack(data *[4]uint64, pos int) (base uint16, next int) {
+	var size, mask uint8
+	_ = mask
+	base, size, mask = decode(v.data[pos])
+	*data = *(*[4]uint64)(unsafe.Pointer(&v.data[(pos + 1)]))
+	next = pos + 1 + int(size) + 1
+	return
+}
+
 func (v *Vector2) Bytes() []uint8 {
 	n := len(v.data) * 4
 	p := (*[0xffffffff]uint8)(unsafe.Pointer(&v.data[0]))
@@ -88,16 +97,11 @@ func (vi *Vector2Iter) hasNext() bool {
 	return true
 }
 
-func (vi *Vector2Iter) Next() (base uint16, data []uint32, ok bool) {
+func (vi *Vector2Iter) Next() (base uint16, data [4]uint64, ok bool) {
 	if !vi.hasNext() {
 		return
 	}
-	var size uint8
-	base, size, _ = decode(vi.vec.data[vi.pos])
-	vi.pos++
-	pos := vi.pos
-	vi.pos += int(size) + 1
-	data = vi.vec.data[pos:vi.pos]
+	base, vi.pos = vi.vec.unpack(&data, vi.pos)
 	ok = true
 	return
 }
