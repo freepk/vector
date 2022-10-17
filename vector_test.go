@@ -6,15 +6,33 @@ import (
 )
 
 const (
-	firstArraySize  = 256 * 1024
-	secondArraySize = 1024 * 1024
+	firstArraySize  = 8 * 1024
+	secondArraySize = 8 * 1024
 	maxArrayValue   = 2 * 1024 * 1024
 )
 
 var (
-	firstArrayInt  = randArray(firstArraySize, firstArraySize*8)
-	secondArrayInt = randArray(secondArraySize, secondArraySize*8)
+	firstArrayInt  = randArray(firstArraySize, firstArraySize*4)
+	secondArrayInt = randArray(secondArraySize, maxArrayValue)
 )
+
+func TestBitmapAdd(t *testing.T) {
+	vec := NewBitmap()
+	for _, n := range firstArrayInt[:256] {
+		vec.Add(uint32(n))
+	}
+	//n := 0
+	//it := NewVectorIter(vec)
+	//for {
+	//	base, data, ok := it.Next()
+	//	if !ok {
+	//		break
+	//	}
+	//	_ = base
+	//	_ = data
+	//	n++
+	//}
+}
 
 func TestVectorAdd(t *testing.T) {
 	vec := NewVector()
@@ -67,6 +85,14 @@ func TestVector2Dump(t *testing.T) {
 		vec.Add(uint32(n))
 	}
 	os.WriteFile("vector2.bin", vec.Bytes(), 0666)
+}
+
+func TestBitmap2Dump(t *testing.T) {
+	vec := NewBitmap()
+	for _, n := range secondArrayInt {
+		vec.Add(uint32(n))
+	}
+	os.WriteFile("bitmap.bin", vec.Bytes(), 0666)
 }
 
 func BenchmarkVectorNext(b *testing.B) {
