@@ -1,7 +1,5 @@
 package vector
 
-import "unsafe"
-
 func extract2(n uint32) (base uint16, mask uint8, data uint64) {
 	base = uint16(n >> 8)
 	mask = 1 << (uint8(n) >> 6)
@@ -57,12 +55,6 @@ func (v *Vector2) Add(n uint32) {
 			}
 		}
 	}
-}
-
-func (v *Vector2) Bytes() []uint8 {
-	n := len(v.data) * 8
-	p := (*[0x7fffffff]uint8)(unsafe.Pointer(&v.data[0]))
-	return p[:n]
 }
 
 type Vector2Iter struct {

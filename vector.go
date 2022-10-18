@@ -61,10 +61,6 @@ func (v *Vector) Add(n uint32) {
 	}
 }
 
-func (v *Vector) Bytes() []uint8 {
-	return v.data
-}
-
 type VectorIter struct {
 	pos int
 	vec *Vector
