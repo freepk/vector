@@ -49,7 +49,7 @@ func (v *Vector) Add(n uint32) {
 				v.data[v.last] = encode(_base, (_mask | mask))
 				v.data = append(v.data, data)
 			} else {
-				v.data[(last - 1)] |= data
+				v.data[last-1] |= data
 			}
 		}
 	}
@@ -115,6 +115,7 @@ func (vi *VectorIter) Next() (base uint16, data [4]uint64, ok bool) {
 		vi.pos += 3
 	case 0b1000:
 		data[3] = vi.vec.data[vi.pos]
+		vi.pos++
 	case 0b1001:
 		data[0] = vi.vec.data[vi.pos]
 		data[3] = vi.vec.data[vi.pos+1]
