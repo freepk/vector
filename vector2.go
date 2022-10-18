@@ -2,21 +2,21 @@ package vector
 
 import "unsafe"
 
-func extract2(n uint32) (base uint16, mask uint8, data uint32) {
+func extract2(n uint32) (base uint16, mask uint8, data uint64) {
 	base = uint16(n >> 8)
-	mask = 1 << (uint8(n) >> 5)
-	data = 1 << ((uint8(n) << 3) >> 3)
+	mask = 1 << (uint8(n) >> 6)
+	data = 1 << ((uint8(n) << 2) >> 2)
 	return
 }
 
-func encode2(base uint16, size, mask uint8) (n uint32) {
-	n = uint32(base)
-	n |= uint32(size) << 16
-	n |= uint32(mask) << 24
+func encode2(base uint16, size, mask uint8) (n uint64) {
+	n = uint64(base)
+	n |= uint64(size) << 16
+	n |= uint64(mask) << 24
 	return
 }
 
-func decode2(n uint32) (base uint16, size, mask uint8) {
+func decode2(n uint64) (base uint16, size, mask uint8) {
 	base = uint16(n)
 	size = uint8(n >> 16)
 	mask = uint8(n >> 24)
@@ -25,7 +25,7 @@ func decode2(n uint32) (base uint16, size, mask uint8) {
 
 type Vector2 struct {
 	last int
-	data []uint32
+	data []uint64
 }
 
 func NewVector2() *Vector2 {
@@ -60,8 +60,8 @@ func (v *Vector2) Add(n uint32) {
 }
 
 func (v *Vector2) Bytes() []uint8 {
-	n := len(v.data) * 4
-	p := (*[0xffffffff]uint8)(unsafe.Pointer(&v.data[0]))
+	n := len(v.data) * 8
+	p := (*[0x7fffffff]uint8)(unsafe.Pointer(&v.data[0]))
 	return p[:n]
 }
 
@@ -88,65 +88,64 @@ func (vi *Vector2Iter) hasNext() bool {
 	return true
 }
 
-func (vi *Vector2Iter) Next() (base uint16, data [8]uint32, ok bool) {
+func (vi *Vector2Iter) Next() (base uint16, data [4]uint64, ok bool) {
 	if !vi.hasNext() {
 		return
 	}
-	var mask uint8
-	base, _, mask = decode2(vi.vec.data[vi.pos])
+	var mask, size uint8
+	base, size, mask = decode2(vi.vec.data[vi.pos])
 	vi.pos++
-	switch mask & 0b00000011 {
-	case 3:
+	switch mask & 0b1111 {
+	case 0b0000:
+	case 0b0001:
 		data[0] = vi.vec.data[vi.pos]
-		vi.pos++
+	case 0b0010:
 		data[1] = vi.vec.data[vi.pos]
-		vi.pos++
-	case 2:
+	case 0b0011:
 		data[0] = vi.vec.data[vi.pos]
-		vi.pos++
-	case 1:
+		data[1] = vi.vec.data[vi.pos+1]
+	case 0b0100:
+		data[2] = vi.vec.data[vi.pos]
+	case 0b0101:
+		data[0] = vi.vec.data[vi.pos]
+		data[2] = vi.vec.data[vi.pos+1]
+	case 0b0110:
 		data[1] = vi.vec.data[vi.pos]
-		vi.pos++
-	}
-	switch mask & 0b00001100 {
-	case (3 << 2):
-		data[2] = vi.vec.data[vi.pos]
-		vi.pos++
+		data[2] = vi.vec.data[vi.pos+1]
+	case 0b0111:
+		data[0] = vi.vec.data[vi.pos]
+		data[1] = vi.vec.data[vi.pos+1]
+		data[2] = vi.vec.data[vi.pos+2]
+	case 0b1000:
 		data[3] = vi.vec.data[vi.pos]
-		vi.pos++
-	case (2 << 2):
+	case 0b1001:
+		data[0] = vi.vec.data[vi.pos]
+		data[3] = vi.vec.data[vi.pos+1]
+	case 0b1010:
+		data[1] = vi.vec.data[vi.pos]
+		data[3] = vi.vec.data[vi.pos+1]
+	case 0b1011:
+		data[0] = vi.vec.data[vi.pos]
+		data[1] = vi.vec.data[vi.pos+1]
+		data[3] = vi.vec.data[vi.pos+2]
+	case 0b1100:
 		data[2] = vi.vec.data[vi.pos]
-		vi.pos++
-	case (1 << 2):
-		data[3] = vi.vec.data[vi.pos]
-		vi.pos++
+		data[3] = vi.vec.data[vi.pos+1]
+	case 0b1101:
+		data[0] = vi.vec.data[vi.pos]
+		data[2] = vi.vec.data[vi.pos+1]
+		data[3] = vi.vec.data[vi.pos+2]
+	case 0b1110:
+		data[1] = vi.vec.data[vi.pos]
+		data[2] = vi.vec.data[vi.pos+1]
+		data[3] = vi.vec.data[vi.pos+2]
+	case 0b1111:
+		data[0] = vi.vec.data[vi.pos]
+		data[1] = vi.vec.data[vi.pos+1]
+		data[2] = vi.vec.data[vi.pos+2]
+		data[3] = vi.vec.data[vi.pos+3]
 	}
-	switch mask & 0b00110000 {
-	case (3 << 4):
-		data[4] = vi.vec.data[vi.pos]
-		vi.pos++
-		data[5] = vi.vec.data[vi.pos]
-		vi.pos++
-	case (2 << 4):
-		data[4] = vi.vec.data[vi.pos]
-		vi.pos++
-	case (1 << 4):
-		data[5] = vi.vec.data[vi.pos]
-		vi.pos++
-	}
-	switch mask & 0b11000000 {
-	case (3 << 6):
-		data[6] = vi.vec.data[vi.pos]
-		vi.pos++
-		data[7] = vi.vec.data[vi.pos]
-		vi.pos++
-	case (2 << 6):
-		data[6] = vi.vec.data[vi.pos]
-		vi.pos++
-	case (1 << 6):
-		data[7] = vi.vec.data[vi.pos]
-		vi.pos++
-	}
+	vi.pos += int(size) + 1
 	ok = true
 	return
 }

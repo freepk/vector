@@ -1,7 +1,7 @@
 package vector
 
 import (
-	// "os"
+	//"os"
 	"testing"
 )
 
