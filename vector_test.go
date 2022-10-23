@@ -17,20 +17,16 @@ var (
 
 func TestVectorAdd(t *testing.T) {
 	vec := NewVector()
+	vec.Clear()
+	for _, v := range firstArrayInt {
+		vec.Add(uint32(v))
+	}
+	t.Log(len(vec.head))
+	vec.Clear()
 	for _, v := range secondArrayInt {
 		vec.Add(uint32(v))
 	}
-	n := 0
-	it := NewVectorIter(vec)
-	for {
-		base, data, ok := it.Next()
-		if !ok {
-			break
-		}
-		_ = base
-		_ = data
-		n++
-	}
+	t.Log(len(vec.head))
 }
 
 func BenchmarkVectorNext(b *testing.B) {
