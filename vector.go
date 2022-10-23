@@ -56,6 +56,23 @@ func (vec *Vector) Add(n uint32) {
 	}
 }
 
+func (vec *Vector) Seek(base uint16, offset uint32) int {
+	left := int(offset)
+	middle := int(offset)
+	right := len(vec.head) - 1
+	for (left - 1) < right {
+		middle = (left + right) / 2
+		if base > vec.head[middle].base {
+			left = middle + 1
+		} else if base < vec.head[middle].base {
+			right = middle - 1
+		} else {
+			return middle
+		}
+	}
+	return left
+}
+
 type VectorIter struct {
 	pos int
 	vec *Vector
@@ -78,6 +95,11 @@ func (vi *VectorIter) hasNext() bool {
 		return false
 	}
 	return true
+}
+
+func (vi *VectorIter) Advance(nbase uint16) (base uint16, data [4]uint64, ok bool) {
+	vi.pos = vi.vec.Seek(nbase, uint32(vi.pos))
+	return vi.Next()
 }
 
 func (vi *VectorIter) Next() (base uint16, data [4]uint64, ok bool) {
@@ -140,27 +162,3 @@ func (vi *VectorIter) Next() (base uint16, data [4]uint64, ok bool) {
 	vi.pos++
 	return
 }
-
-// func (vi *VectorIter) Advance(n uint32) (base uint16, data [4]uint64, ok bool) {
-// 	if !vi.hasNext() {
-// 		return
-// 	}
-// 	_base := uint16(n >> 8)
-// 	pos := 0
-// 	one := vi.pos
-// 	two := len(vi.vec.head)
-// 	for one != two {
-// 		pos = (one + two) / 2
-// 		base = vi.vec.head[pos].base
-// 		if base == _base {
-// 			break
-// 		} else if base > _base {
-// 			one = pos + 1
-// 		} else {
-// 			two = pos - 1
-// 		}
-// 	}
-// 	ok = true
-// 	vi.pos =
-// 	return
-// }

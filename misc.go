@@ -74,3 +74,20 @@ func randArray(n, m int) []int {
 	a = dedupInts(a)
 	return a
 }
+
+func gtOrEq(n int, arr []int) int {
+	l := 0
+	m := 0
+	r := len(arr) - 1
+	for (l - 1) < r {
+		m = (l + r) / 2
+		if n > arr[m] {
+			l = m + 1
+		} else if n < arr[m] {
+			r = m - 1
+		} else {
+			return m
+		}
+	}
+	return l
+}
