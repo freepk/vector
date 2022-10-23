@@ -146,20 +146,21 @@ func (vi *VectorIter) Next() (base uint16, data [4]uint64, ok bool) {
 // 		return
 // 	}
 // 	_base := uint16(n >> 8)
+// 	pos := 0
 // 	one := vi.pos
 // 	two := len(vi.vec.head)
 // 	for one != two {
-// 		mid := (one + two) / 2
-// 		base = vi.vec.head[mid].base
+// 		pos = (one + two) / 2
+// 		base = vi.vec.head[pos].base
 // 		if base == _base {
 // 			break
 // 		} else if base > _base {
-// 			one = mid + 1
+// 			one = pos + 1
 // 		} else {
-// 			two = mid - 1
+// 			two = pos - 1
 // 		}
 // 	}
 // 	ok = true
-// 	vi.pos++
+// 	vi.pos =
 // 	return
 // }

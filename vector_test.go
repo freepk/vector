@@ -48,3 +48,24 @@ func BenchmarkVectorNext(b *testing.B) {
 		}
 	}
 }
+
+func BenchmarkVectorNextUnpack(b *testing.B) {
+	var res [256]uint8
+	vec := NewVector()
+	for _, v := range secondArrayInt {
+		vec.Add(uint32(v))
+	}
+	it := NewVectorIter(vec)
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		it.Reset()
+		for {
+			base, data, ok := it.Next()
+			if !ok {
+				break
+			}
+			_ = base
+			bitsToBytes64(&res, &data)
+		}
+	}
+}
