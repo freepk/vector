@@ -97,9 +97,8 @@ func (vi *VectorIter) hasNext() bool {
 	return true
 }
 
-func (vi *VectorIter) Advance(xbase uint16) (base uint16, data [4]uint64, ok bool) {
-	vi.pos = vi.vec.Seek(xbase, uint32(vi.pos))
-	return vi.Next()
+func (vi *VectorIter) Advance(base uint16) {
+	vi.pos = vi.vec.Seek(base, uint32(vi.pos))
 }
 
 func (vi *VectorIter) Next() (base uint16, data [4]uint64, ok bool) {
