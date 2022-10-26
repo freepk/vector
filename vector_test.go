@@ -21,12 +21,10 @@ func TestVectorAdd(t *testing.T) {
 	for _, v := range firstArrayInt {
 		vec.Add(uint32(v))
 	}
-	t.Log(len(vec.head))
 	vec.Clear()
 	for _, v := range secondArrayInt {
 		vec.Add(uint32(v))
 	}
-	t.Log(len(vec.head))
 }
 
 func BenchmarkVectorNext(b *testing.B) {

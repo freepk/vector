@@ -49,7 +49,7 @@ func (vec *Vector) Add(n uint32) {
 				vec.head[last].mask |= mask
 				vec.data = append(vec.data, data)
 			} else {
-				link := vec.head[last].link
+				link := len(vec.data) - 1
 				vec.data[link] |= data
 			}
 		}
